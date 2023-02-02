@@ -1,0 +1,231 @@
+// VARS
+
+$maxWidth: 1800;
+$maxWidthContainer: 1210;
+
+// MIXINS
+
+@mixin adaptive-value ($property, $startSize, $minSize, $type) {
+  $addSize: $startSize - $minSize;
+
+  @if $type==1 {
+    // Толко если меньше контейнера
+    #{$property}: $startSize + px;
+
+    @media (max-width: #{$maxWidthContainer + px}) {
+      #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidthContainer - 320}));
+    }
+  }
+
+  @else if $type==2 {
+    // Только если больше контейнера
+    #{$property}: $startSize + px;
+
+    @media (min-width: #{$maxWidthContainer + px}) {
+      #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+    }
+  }
+
+  @else {
+    // Всегда 
+    #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+  }
+}
+
+%oswald-300 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+}
+
+%oswald-400 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+}
+
+%oswald-500 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+}
+
+%oswald-700 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+}
+
+%openSans-300 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+}
+
+%openSans-400 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}
+
+%openSans-500 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 500;
+}
+
+%openSans-600 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+}
+
+%before-text {
+  &::before {
+    position: absolute;
+    content: "";
+    height: 2px;
+    width: 20px;
+    background: #353535;
+    left: 0;
+    top: 12px;
+  }
+}
+
+%after-title {
+  &:after {
+    width: 45px;
+    height: 2px;
+    background: #252525;
+    content: "";
+    position: absolute;
+    bottom: -7px;
+    left: 0;
+  }
+}
+
+// GLOBAL
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  @extend %oswald-300;
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.container {
+  max-width: $maxWidthContainer + px;
+  padding: 0 15px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.visually-hidden:not(:focus):not(:active),
+input[type="checkbox"].visually-hidden,
+input[type="radio"].visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  bottom: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+}
+
+.page {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+.hidden {
+  display: none;
+}
+
+.lock {
+  overflow: hidden;
+}
+
+.img-box {
+  &__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition: all .3s ease;
+  z-index: 50;
+  cursor: pointer;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.ibg {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+
+  img {
+    display: none;
+  }
+}
+
+.logo {
+  @extend %oswald-400;
+  font-size: 48px;
+  line-height: 48px;
+  letter-spacing: 3.072px;
+  display: inline-block;
+  transition: all .3s ease;
+  color: rgb(255, 255, 255, .5);
+
+  @media (min-width: 768px) {
+    &:hover {
+      color: rgb(255, 255, 255);
+    }
+  }
+}
+
+.title {
+  @extend %oswald-700;
+  @include adaptive-value("font-size", 48, 38, 1);
+  @include adaptive-value("line-height", 71, 61, 1);
+  letter-spacing: 3.072px;
+  color: #252525;
+  position: relative;
+  white-space: nowrap;
+  @extend %after-title;
+}
